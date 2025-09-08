@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "multicore.h": "c",
+        "cyw43_arch.h": "c"
+    }
+}
