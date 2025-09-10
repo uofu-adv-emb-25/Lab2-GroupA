@@ -24,6 +24,7 @@ void test_multiplication(void)
 
 int main (void)
 {
+    while(1){
     stdio_init_all();
     sleep_ms(5000); // Give time for TTY to attach.
     printf("Start tests\n");
@@ -31,5 +32,5 @@ int main (void)
     RUN_TEST(test_variable_assignment);
     RUN_TEST(test_multiplication);
     sleep_ms(5000);
-    return UNITY_END();
+    }
 }
