@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "multicore.h": "c",
-        "cyw43_arch.h": "c"
+        "cyw43_arch.h": "c",
+        "unity_config.h": "c",
+        "unity.h": "c"
     }
 }

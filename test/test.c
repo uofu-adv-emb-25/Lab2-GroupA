@@ -8,12 +8,14 @@ void setUp(void) {}
 
 void tearDown(void) {}
 
+// A basic unity unit test to check if variable assignment is working correctly
 void test_variable_assignment()
 {
     int x = 1;
     TEST_ASSERT_TRUE_MESSAGE(x == 1,"Variable assignment failed.");
 }
 
+// A basic unity unit test to check if division of x and y yields the correct result
 void test_multiplication(void)
 {
     int x = 30;
@@ -22,6 +24,8 @@ void test_multiplication(void)
     TEST_ASSERT_TRUE_MESSAGE(z == 5, "Multiplication of two integers returned incorrect value.");
 }
 
+
+// main intializes and then calls the unity tests.
 int main (void)
 {
     stdio_init_all();
