@@ -1,38 +1,71 @@
+
 #include <stdio.h>
 #include <pico/stdlib.h>
 #include <stdint.h>
 #include <unity.h>
+#include <pico/cyw43_arch.h>
 #include "unity_config.h"
+#include "test_func.h"
 
 void setUp(void) {}
 
 void tearDown(void) {}
 
-// A basic unity unit test to check if variable assignment is working correctly
-void test_variable_assignment()
-{
-    int x = 1;
-    TEST_ASSERT_TRUE_MESSAGE(x == 1,"Variable assignment failed.");
+char switch_case(char c) {
+    if (c >= 'a' && c <= 'z') {
+        return (char)(c - 'a' + 'A'); // lowercase → uppercase
+    } else if (c >= 'A' && c <= 'Z') {
+        return (char)(c - 'A' + 'a'); // uppercase → lowercase
+    } else {
+        return c; // non-alphabetic → unchanged
+    }
 }
 
-// A basic unity unit test to check if division of x and y yields the correct result
-void test_multiplication(void)
+//A basic test to check if the changeCase function is working with an error message if there is an incorrect return
+void test_changeCase(){
+    TEST_ASSERT_TRUE_MESSAGE(switch_case('a')=='A', "FLAG: Test failed - wrong character was returned (test a -> A)");
+    TEST_ASSERT_TRUE_MESSAGE(switch_case('B')=='b', "FLAG: Test failed - wrong character was returned (test B -> b)");
+    TEST_ASSERT_TRUE_MESSAGE(switch_case('!')=='!', "FLAG: Test failed - wrong character was returned (test ! -> !)");  
+}
+
+bool do_blink(bool on, int *count)
 {
-    int x = 30;
-    int y = 6;
-    int z = x / y;
-    TEST_ASSERT_TRUE_MESSAGE(z == 5, "Multiplication of two integers returned incorrect value.");
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, on);
+    *count += 1;
+    return *count % 11 ? !on : on;
+}
+
+void test_blinking(void)
+{
+    int count = 0;
+    bool on = 0;
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
+    for (int i = 0; i < 500; i += 1) {
+        int curr_count = count;
+        bool next_on = do_blink(on, &count);
+        int gpio = cyw43_arch_gpio_get(CYW43_WL_GPIO_LED_PIN);
+        TEST_ASSERT_EQUAL_MESSAGE(gpio, on, "GPIO should be set to the state of 'on' variable.");
+        TEST_ASSERT_EQUAL_MESSAGE(count, curr_count +1, "Always increment the count");
+        if ((i+1) % 11) {
+            TEST_ASSERT_NOT_EQUAL_MESSAGE(on, next_on, "Should toggle when count is not a multiple of 11.");
+        } else {
+            TEST_ASSERT_EQUAL_MESSAGE(on, next_on, "Should not toggle otherwise.");
+        }
+        on = next_on;
+    }
 }
 
 
-// main intializes and then calls the unity tests.
 int main (void)
 {
     stdio_init_all();
-    sleep_ms(5000); // Give time for TTY to attach.
-    printf("Start tests\n");
-    UNITY_BEGIN();
-    RUN_TEST(test_variable_assignment);
-    RUN_TEST(test_multiplication);
-    sleep_ms(5000);
+    hard_assert(cyw43_arch_init() == PICO_OK);
+    while(1) {
+	sleep_ms(5000); // Give time for TTY to attach.
+	printf("Start tests\n");
+	UNITY_BEGIN();
+	RUN_TEST(test_changeCase);
+	RUN_TEST(test_blinking);
+	UNITY_END();
+    }
 }

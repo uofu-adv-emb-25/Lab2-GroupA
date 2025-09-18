@@ -5,6 +5,7 @@
         "unity_config.h": "c",
         "unity.h": "c",
         "stdint.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "algorithm": "c"
     }
 }
