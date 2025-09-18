@@ -3,6 +3,8 @@
         "multicore.h": "c",
         "cyw43_arch.h": "c",
         "unity_config.h": "c",
-        "unity.h": "c"
+        "unity.h": "c",
+        "stdint.h": "c",
+        "stdlib.h": "c"
     }
 }
